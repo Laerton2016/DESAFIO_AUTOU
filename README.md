@@ -68,7 +68,7 @@ uvicorn main:app --reload
 O servidor estará rodando em http://127.0.0.1:8000.
 Agora, basta abrir o arquivo index.html (preferencialmente usando a extensão Live Server do VS Code) no seu navegador.
 
-📁 Estrutura do Repositório
+
 ## 📁 Estrutura do Repositório
 
 ```text
