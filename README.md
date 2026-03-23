@@ -33,16 +33,18 @@ Esta é uma aplicação Full-stack moderna desenvolvida para o desafio técnico 
 ### 1. Requisitos Prévios
 Certifique-se de ter o **Python 3.9+** instalado em sua máquina.
 
-### 2. Configurando a Chave da IA (Google Gemini)
+### 2. Configurando a chave da IA (Google Gemini)
 Para que a aplicação funcione, você precisará de uma chave gratuita:
 1. Acesse o [Google AI Studio](https://aistudio.google.com/).
 2. Clique em **"Get API Key"**.
 3. Crie uma nova chave e copie o código gerado.
-4. Crie um arquivo chamado .env na pasta na raiz, conforme sua estrutura, e adicione sua chave: GEMINI_API_KEY=SUA_CHAVE_AQUI.
-   
-Nota: O arquivo .env já está listado no .gitignore para garantir que sua chave privada não seja enviada para o repositório público.
+4. Crie um arquivo chamado `.env` na pasta na raiz, conforme sua estrutura, e adicione sua chave: `GEMINI_API_KEY=SUA_CHAVE_AQUI`.
 
-Nota: Neste projeto estamos usando "models/gemini-3.1-flash-lite-preview" para testes com limitação de 500 RPD (Solicitações por dia) / 250K TPM (Tokens por minuto) / 15 RPM (Solicitações por minuto)
+### NOTAS
+1. O arquivo .env já está listado no .gitignore para garantir que sua chave privada não seja enviada para o repositório público.
+2. Neste projeto estamos usando "models/gemini-3.1-flash-lite-preview" para testes com limitação de 500 RPD (Solicitações por dia) / 250K TPM (Tokens por minuto) / 15 RPM (Solicitações por minuto)
+3. Para uso em produção, adicione a variável `FRONTEND_URL`, no arquivo `.env` na pasta raiz, com o link do endereço em que o front está hospedado em produção. Esta URL configura a permissão de requisições via CORS. Para uso local esta configuração não se faz necessária.
+4. No `index.js` em `frontend\scripts\` deve-se injetar na variável `API_URL` a URL base do serviço de Backend de produção. Para uso local, essa configuração é dinâmica.
 
 ### 3. Instalação
 No terminal (dentro da pasta do projeto):
@@ -69,6 +71,8 @@ uvicorn main:app --reload
 ```
 O servidor estará rodando em http://127.0.0.1:8000.
 Agora, basta abrir o arquivo index.html (preferencialmente usando a extensão Live Server do VS Code) no seu navegador.
+
+
 
 
 ## 📁 Estrutura do Repositório
