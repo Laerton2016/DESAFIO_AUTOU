@@ -69,16 +69,20 @@ O servidor estará rodando em http://127.0.0.1:8000.
 Agora, basta abrir o arquivo index.html (preferencialmente usando a extensão Live Server do VS Code) no seu navegador.
 
 📁 Estrutura do Repositório
+## 📁 Estrutura do Repositório
+
+```text
+.
 ├── backend/
 │   ├── main.py            # Servidor FastAPI e lógica de IA
-│   └── requirements.txt   # Dependências do projeto
+│   ├── requirements.txt   # Dependências do projeto
+│   └── .env               # (Não versionado) Chaves de API
 ├── frontend/
 │   ├── index.html         # Interface do usuário
 │   └── scripts/
-│       └── index.js       # Lógica interface do usuário
+│       └── index.js       # Lógica da interface do usuário
 ├── examples/              # Arquivos .txt e .pdf para teste rápido
-├── README.md
-└── .env                   # (Não versionado) Chaves de API
+└── README.md
 
 👨‍💻 Autor
 Desenvolvido por Laerton Marques de Figueiredo Analista de Sistemas Fullstack
