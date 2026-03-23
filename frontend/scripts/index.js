@@ -11,6 +11,8 @@ document.getElementById('fileInput').addEventListener('change', () => {
 });
 
 
+
+
 // --- FUNÇÃO PRINCIPAL DE PROCESSAMENTO ---
 
 async function processarEmail() {
@@ -37,8 +39,11 @@ async function processarEmail() {
 
     try {
         let response;
-        const API_BASE_URL = 'http://localhost:8000'; 
-
+        
+        const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" 
+                        ? "http://localhost:8000" 
+                        : "__API_URL_PLACEHOLDER__";        
+                        
         if (fileInput.files.length > 0) {
             const formData = new FormData();
             formData.append('file', fileInput.files[0]);
