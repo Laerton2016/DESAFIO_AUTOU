@@ -39,7 +39,9 @@ Para que a aplicação funcione, você precisará de uma chave gratuita:
 2. Clique em **"Get API Key"**.
 3. Crie uma nova chave e copie o código gerado.
 4. Crie um arquivo chamado .env na pasta na raiz, conforme sua estrutura, e adicione sua chave: GEMINI_API_KEY=SUA_CHAVE_AQUI.
+   
 Nota: O arquivo .env já está listado no .gitignore para garantir que sua chave privada não seja enviada para o repositório público.
+
 Nota: Neste projeto estamos usando "models/gemini-3.1-flash-lite-preview" para testes com limitação de 500 RPD (Solicitações por dia) / 250K TPM (Tokens por minuto) / 15 RPM (Solicitações por minuto)
 
 ### 3. Instalação
