@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 
 # Configurações iniciais
 load_dotenv()
+# Captura a URL do Frontend. Se não existir, assume o padrão de desenvolvimento
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://127.0.0.1:5500") 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # Centralização do Prompt para facilitar manutenção
@@ -28,7 +30,12 @@ app = FastAPI(title="Email Classifier AI - AutoU Challenge")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    # Aceita tanto a URL de produção quanto a de desenvolvimento
+    allow_origins=[
+        FRONTEND_URL,
+        "http://127.0.0.1:5500",
+        "http://localhost:5500"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
