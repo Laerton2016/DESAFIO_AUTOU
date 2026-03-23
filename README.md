@@ -38,12 +38,12 @@ Para que a aplicação funcione, você precisará de uma chave gratuita:
 1. Acesse o [Google AI Studio](https://aistudio.google.com/).
 2. Clique em **"Get API Key"**.
 3. Crie uma nova chave e copie o código gerado.
-4. Crie um arquivo chamado .env na pasta na raiz, conforme sua estrutura, e adicione sua chave: GEMINI_API_KEY=SUA_CHAVE_AQUI.
+4. Crie um arquivo chamado `.env` na pasta na raiz, conforme sua estrutura, e adicione sua chave: `GEMINI_API_KEY=SUA_CHAVE_AQUI`.
 
 ### NOTAS
 1. O arquivo .env já está listado no .gitignore para garantir que sua chave privada não seja enviada para o repositório público.
 2. Neste projeto estamos usando "models/gemini-3.1-flash-lite-preview" para testes com limitação de 500 RPD (Solicitações por dia) / 250K TPM (Tokens por minuto) / 15 RPM (Solicitações por minuto)
-3. Para uso em produção, adicione a variável `FRONTEND_URL`, no arquivo .env na pasta raiz, com o link do endereço em que o front está hospedado em produção. Esta URL configura a permissão de requisições via CORS. Para uso local esta configuração não se faz necessária.
+3. Para uso em produção, adicione a variável `FRONTEND_URL`, no arquivo `.env` na pasta raiz, com o link do endereço em que o front está hospedado em produção. Esta URL configura a permissão de requisições via CORS. Para uso local esta configuração não se faz necessária.
 4. No `index.js` em `frontend\scripts\` deve-se injetar na variável `API_URL` a URL base do serviço de Backend de produção. Para uso local, essa configuração é dinâmica.
 
 ### 3. Instalação
