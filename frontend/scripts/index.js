@@ -37,36 +37,54 @@ async function processarEmail() {
 
     try {
         let response;
-        
-        // Prioriza o arquivo se houver um selecionado
+        const API_BASE_URL = 'http://localhost:8000'; 
+
         if (fileInput.files.length > 0) {
             const formData = new FormData();
             formData.append('file', fileInput.files[0]);
-            // IMPORTANTE: Altere para sua URL final após o deploy no Render
-            response = await fetch('http://localhost:8000/upload', { 
-                method: 'POST', 
-                body: formData 
-            });
+            response = await fetch(`${API_BASE_URL}/upload`, { method: 'POST', body: formData });
         } else {
-            response = await fetch('http://localhost:8000/analyze', {
+            response = await fetch(`${API_BASE_URL}/analyze`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ content: emailText })
             });
         }
 
-        if (!response.ok) throw new Error("Falha na API");
+        // 1. Tratamento Robusto de Respostas de Erro (400, 422, 500)
+        if (!response.ok) {
+            let errorMessage = "Falha na comunicação com o servidor.";
+            
+            try {
+                const errorData = await response.json();
+                // Tenta pegar o 'detail' do FastAPI, se não existir usa a genérica
+                errorMessage = errorData?.detail ?? errorMessage;
+            } catch (jsonError) {
+                // Caso o erro seja tão grave que nem JSON o servidor retornou
+                console.error("Erro ao parsear JSON de erro:", jsonError);
+            }
+            
+            throw new Error(errorMessage);
+        }
 
         const data = await response.json();
         exibirResultado(data);
 
     } catch (error) {
-        // Tratamento de erro na interface
-        resultCard.classList.remove('opacity-50');
-        badge.innerText = "Erro";
-        badge.className = "mt-1 inline-block px-3 py-1 rounded-full text-sm font-bold bg-red-100 text-red-700";
-        resArea.innerText = "Houve uma falha interna na comunicação com a IA. Por favor, tente novamente mais tarde.";
-        resArea.classList.add('text-red-500');
+       resultCard.classList.remove('opacity-50');
+        badge.innerText = "Aviso";
+        badge.className = "mt-1 inline-block px-3 py-1 rounded-full text-sm font-bold bg-amber-100 text-amber-700";
+        
+        // 2. Lógica de Exibição Final
+        if (error.message === "SISTEMA_OFFLINE" || error.message.includes("fetch")) {
+            resArea.innerText = "Houve uma falha de comunicação com o servidor. Por favor, tente novamente mais tarde.";
+        } else {
+            // Aqui ele exibe apenas as mensagens que definimos no 'detail' do Backend
+            resArea.innerText = error.message;
+        }
+
+        resArea.classList.add('text-amber-600', 'font-medium');
+        resArea.classList.remove('text-slate-800');
     } finally {
         btn.disabled = false;
         spinner.classList.add('hidden');
@@ -87,7 +105,8 @@ function exibirResultado(data) {
     
     badge.innerText = data.categoria;
     resArea.innerText = data.resposta;
-    resArea.classList.remove('italic', 'text-slate-500', 'text-red-500');
+    
+    resArea.classList.remove('italic', 'text-slate-500', 'text-red-500','text-amber-600', 'font-medium');
     resArea.classList.add('text-slate-800');
 
     if (data.categoria === "Produtivo") {

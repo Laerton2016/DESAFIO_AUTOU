@@ -17,7 +17,7 @@ Aja como um assistente de triagem de emails da equipe AutoU.
 Analise o conteúdo e retorne ESTRITAMENTE um objeto JSON com:
 1. "categoria": "Produtivo" (requer ação/suporte) ou "Improdutivo" (agradecimento/social).
 2. "resposta": Uma sugestão curta e profissional, identificando o remetente se possível. 
-Ao término da resposta, adicione: "Atenciosamente, equipe AutoU."
+Ao término da resposta, adicione, em uma linha separada: "Atenciosamente, equipe AutoU."
 """
 
 # Inicialização do Modelo
@@ -77,20 +77,50 @@ async def analyze_email(data: EmailInput):
         print(f"Erro na IA: {e}")
         raise HTTPException(status_code=500, detail="Erro ao processar análise de texto.")
 
+
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
+    PDF_MAGIC = b'\x25\x50\x44\x46' # %PDF
+    
     try:
+        # 1. Validação de Extensão Básica
+        file_ext = os.path.splitext(file.filename)[1].lower()
+        if file_ext not in [".pdf", ".txt"]:
+            raise HTTPException(status_code=400, detail="Extensão não permitida. Use .pdf ou .txt")
+
+        # 2. Leitura inicial para validação de integridade (Magic Numbers)
+        header = await file.read(1024)
+        await file.seek(0) # Reseta o ponteiro para leitura completa posterior
+
+        # 3. Validação de Fraude (Assinatura Real vs Extensão)
+        if file_ext == ".pdf":
+            if not header.startswith(PDF_MAGIC):
+                raise HTTPException(status_code=400, detail="Arquivo forjado: Conteúdo não é um PDF válido.")
+        
+        elif file_ext == ".txt":
+            try:
+                # Tenta decodificar o início do arquivo. Se for binário (imagem/exe), vai falhar.
+                header.decode('utf-8')
+            except UnicodeDecodeError:
+                raise HTTPException(status_code=400, detail="Arquivo forjado: Conteúdo binário detectado em .txt")
+
+        # 4. Se passou nas travas, lê o conteúdo total e envia para a IA
         file_content = await file.read()
-        # Envio multimodal direto (PDF/Txt)
+        
+        # O Gemini 3.1 Flash Lite lida bem com o mime_type vindo do upload
         response = model.generate_content([
             PROMPT_PRINCIPAL,
             {'mime_type': file.content_type, 'data': file_content}
         ])
+        
         return parse_ai_json(response.text)
-    except Exception as e:
-        print(f"Erro Multimodal: {e}")
-        raise HTTPException(status_code=500, detail="Falha ao processar arquivo multimodal.")
 
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        print(f"Erro no Upload: {e}")
+        raise HTTPException(status_code=500, detail="Falha interna no processamento do arquivo.")
+    
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
