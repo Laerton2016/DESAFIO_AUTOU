@@ -29,7 +29,7 @@ Ao final da resposta sugerida, adicione, em uma linha separada: "Atenciosamente,
 
 # Inicialização do Modelo
 genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel(model_name='models/gemini-3.1-flash-lite-preview')
+model = genai.GenerativeModel(model_name='models/gemini-3-flash-preview')
 
 app = FastAPI(title="Email Classifier AI - AutoU Challenge")
 
