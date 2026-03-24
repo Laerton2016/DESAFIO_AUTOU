@@ -40,10 +40,12 @@ async function processarEmail() {
     const coldStartTimer = setTimeout(() => {
         // Se após 4 segundos o botão ainda estiver desativado, avisamos o usuário
         if (btn.disabled) { 
-            resArea.innerText = "O servidor do Render está acordando... Isso pode levar até 30 segundos no primeiro acesso.";
+            badge.innerText = "Aviso";
+            badge.className = "mt-1 inline-block px-3 py-1 rounded-full text-sm font-bold bg-amber-100 text-amber-700";
+            resArea.innerText = "O servidor pode demorar um pouco por causa da inicialização dos serviços.";
         }
-    }, 4000);
-    
+    }, 5000);
+
     try {
         let response;
         
