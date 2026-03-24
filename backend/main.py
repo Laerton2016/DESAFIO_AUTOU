@@ -73,6 +73,12 @@ def parse_ai_json(raw_response: str):
     except Exception:
         return {"categoria": "Erro", "resposta": "Falha ao decodificar resposta da IA."}
 
+@app.get("/health")
+async def health_check():
+    # Esta rota não consome a API do Gemini
+    return {"status": "online", "message": "Servidor operante"}
+
+
 @app.post("/analyze")
 async def analyze_email(data: EmailInput):
     if not data.content.strip():
